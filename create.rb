@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+
+require 'fileutils'
+
+FileUtils.mkdir 'config'
+FileUtils.mkdir 'raw-data'
+FileUtils.mkdir 'data'
+FileUtils.mkdir 'doc'
+FileUtils.mkdir 'lib'
+FileUtils.mkdir 'report'
+FileUtils.mkdir 'script'

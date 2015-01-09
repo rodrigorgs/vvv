@@ -1,0 +1,6 @@
+*.swp
+*~
+data/*
+script/*
+doc/*
+!.gitkeep
