@@ -14,3 +14,4 @@ for (conf in vvv_confs(vvv("script", "join.R"))) {
 }
 
 OUTPUT <- "../data/e"
+file.create(OUTPUT, showWarnings=F)
