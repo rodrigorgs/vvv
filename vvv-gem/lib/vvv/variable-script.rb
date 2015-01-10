@@ -36,7 +36,7 @@ class VariableScript
     conf_sym = convert_keys_to_sym(conf)
     
     ret = contents
-    ret = ret.gsub(/vvv\(["'](.*?)["'],.*?\)/) { conf_sym[$1.to_sym].inspect }
+    ret = ret.gsub(vvv_config[:R][:VVV_REGEX]) { conf_sym[$1.to_sym].inspect }
     ret = ret.gsub(vvv_config[:R][:INPUT_REGEX]) { vvv_config[:R][:INPUT_FORMAT] % ($1 % conf_sym) }
     ret = ret.gsub(vvv_config[:R][:OUTPUT_REGEX]) { vvv_config[:R][:OUTPUT_FORMAT] % ($1 % conf_sym) }
     ret
@@ -45,7 +45,7 @@ class VariableScript
   def contents_for_multiple_configurations(confs)
     confs = confs.map { |conf| convert_keys_to_sym(conf) }
     ret = contents
-    ret = ret.gsub(/vvv\(["'](.*?)["'],.*?\)/) do
+    ret = ret.gsub(vvv_config[:R][:VVV_REGEX]) do
       x = confs.map { |conf| conf[$1.to_sym].inspect }.uniq
       x.size == 1 ? x[0].inspect : "c(#{x.join(', ')})"
     end

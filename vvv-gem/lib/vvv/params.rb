@@ -4,7 +4,8 @@ def vvv_config
 			INPUT_REGEX: /^\s*INPUT\s*<-\s*['"](.+?)['"]/,
 			INPUT_FORMAT: 'INPUT <- "%s"',
 			OUTPUT_REGEX: /^\s*OUTPUT\s*<-\s*['"](.+?)['"]/,
-			OUTPUT_FORMAT: 'OUTPUT <- "%s"'
+			OUTPUT_FORMAT: 'OUTPUT <- "%s"',
+			VVV_REGEX: /vvv\(["'](.*?)["'](?:,.*?)?\)/
 		}
 	}
 

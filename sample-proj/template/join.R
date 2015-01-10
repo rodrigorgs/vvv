@@ -1,10 +1,12 @@
 source("../lib/variability.R", chdir=T)
 
+vvv_set("gender", "male")
+
 # JOIN
 
 INPUT <- "../data/d-%{gender}"
 
-genders <- vvv("gender", "123")
+genders <- vvv("gender")
 
 all <- NA
 for (conf in vvv_confs(vvv("script", "join.R"))) {
