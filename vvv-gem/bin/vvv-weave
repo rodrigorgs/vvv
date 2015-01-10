@@ -9,6 +9,27 @@ end
 require 'json'
 require 'fileutils'
 
+def write_if_different(file, contents)
+  old_contents = File.exist?(file) ? IO.read(file) : nil
+  if old_contents.nil? || old_contents != contents
+    puts "overwriting #{file}"
+    File.open(file, 'w') { |f| f.write(contents) }
+  else
+    puts "skipping #{file}"
+  end
+end
+
+def copy_if_different(orig, dest)
+  a = IO.read(orig)
+  b = File.exist?(dest) ? IO.read(dest) : nil
+  if b.nil? || a != b
+    puts "copying #{orig} to #{dest}"
+    FileUtils.cp orig, dest
+  else
+    puts "skipping #{orig}"
+  end
+end
+
 # Weave template files
 json = JSON.parse(IO.read('Varconf.json'))
 json.each_pair do |script, confs|
@@ -17,13 +38,13 @@ json.each_pair do |script, confs|
   if file.original_name == 'join.R'
     output_path = "script/#{file.original_name}"
     contents = file.contents_for_multiple_configurations(confs)
-    File.open(output_path, "w") { |f| f.write contents }
+    write_if_different(output_path, contents)
   else
     confs.each do |conf|
       output_path = "script/#{file.name_for_configuration(conf)}"
       contents = file.contents_for_configuration(conf)
       contents = "# Configuration: #{conf.inspect}\n" + contents
-      File.open(output_path, "w") { |f| f.write contents }
+      write_if_different(output_path, contents)
     end
   end
 end
@@ -32,5 +53,5 @@ end
 all_files = Dir.entries("template").grep(/^[^.]/)
 templates = json.keys
 (all_files - templates).each do |file|
-  FileUtils.cp "template/#{file}", "script/#{file}"
+  copy_if_different "template/#{file}", "script/#{file}"
 end
