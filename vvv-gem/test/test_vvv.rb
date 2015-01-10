@@ -9,25 +9,25 @@ class VvvTest < Test::Unit::TestCase
   end
 
   def test_contents_for_configuration
-    contents = '# INPUT: x-%{var}.rds'
-    expected = '# INPUT: x-alpha.rds'
+    contents = 'INPUT <- "x-%{var}.rds"'
+    expected = 'INPUT <- "x-alpha.rds"'
     @v.instance_variable_set(:@contents, contents)
     assert_equal expected, @v.contents_for_configuration(@confs[0])
 
-    contents = '# OUTPUT: x-%{var}.rds'
-    expected = '# OUTPUT: x-alpha.rds'
+    contents = 'OUTPUT <- "x-%{var}.rds"'
+    expected = 'OUTPUT <- "x-alpha.rds"'
     @v.instance_variable_set(:@contents, contents)
     assert_equal expected, @v.contents_for_configuration(@confs[0])
   end
 
   def test_contents_for_multiple_configurations
-    contents = '# INPUT: x-%{var}.rds'
-    expected = ['# INPUT: x-alpha.rds', '# INPUT: x-beta.rds'].join("\n")
+    contents = 'INPUT <- "x-%{var}.rds"'
+    expected = ['INPUT <- "x-alpha.rds"', 'INPUT <- "x-beta.rds"'].join("\n")
     @v.instance_variable_set(:@contents, contents)
     assert_equal expected, @v.contents_for_multiple_configurations(@confs)
 
-    contents = '# OUTPUT: x-%{var}.rds'
-    expected = ['# OUTPUT: x-alpha.rds', '# OUTPUT: x-beta.rds'].join("\n")
+    contents = 'OUTPUT <- "x-%{var}.rds"'
+    expected = ['OUTPUT <- "x-alpha.rds"', 'OUTPUT <- "x-beta.rds"'].join("\n")
     @v.instance_variable_set(:@contents, contents)
     assert_equal expected, @v.contents_for_multiple_configurations(@confs)
   end

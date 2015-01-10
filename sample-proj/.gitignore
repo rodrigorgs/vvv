@@ -1,3 +1,4 @@
 Makefile
 doc/*
+script/*
 !.gitkeep

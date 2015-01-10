@@ -1,5 +1,7 @@
-a <- readLines("../raw-data/a")
+INPUT <- "../raw-data/a"
+a <- readLines(INPUT)
 
 b <- paste0(a, a)
 
-writeLines(b, "../data/b")
+OUTPUT <- "../data/b"
+writeLines(b, OUTPUT)

@@ -2,13 +2,13 @@ source("../lib/variability.R", chdir=T)
 
 # SCRIPT: fork-%{gender}.R
 
-# INPUT: ../data/b
-b <- readLines("../data/b")
+INPUT <- "../data/b"
+b <- readLines(vvv(INPUT))
 
 gender <- vvv("gender", "male")
 result <- c(b, gender, b)
 
-output_filename <- paste0("../data/c-", gender)
-writeLines(result, output_filename)
+OUTPUT <- "../data/c-%{gender}"
+writeLines(result, vvv(OUTPUT, "male"))
 
 # OUTPUT: ../data/c-%{gender}

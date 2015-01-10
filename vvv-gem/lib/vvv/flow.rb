@@ -44,8 +44,8 @@ def collect_flow
     contents = IO.read(filename)
 
     node = ProcessingNode.new(filename)
-    contents.scan(/# INPUT: (.+)/) { |m| node.add_input(m[0]) }
-    contents.scan(/# OUTPUT: (.+)/) { |m| node.add_output(m[0]) }
+    contents.scan(vvv_config[:R][:INPUT_REGEX]) { |m| node.add_input(m[0]) }
+    contents.scan(vvv_config[:R][:OUTPUT_REGEX]) { |m| node.add_output(m[0]) }
     nodes << node
   end
 
