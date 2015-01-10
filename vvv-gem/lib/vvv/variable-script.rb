@@ -37,7 +37,8 @@ class VariableScript
     
     ret = contents
     ret = ret.gsub(/vvv\(["'](.*?)["'],.*?\)/) { conf_sym[$1.to_sym].inspect }
-    ret = ret.gsub(/# (INPUT|OUTPUT): (.+)/) { "# #{$1}: #{$2 % conf_sym}" }
+    ret = ret.gsub(vvv_config[:R][:INPUT_REGEX]) { vvv_config[:R][:INPUT_FORMAT] % ($1 % conf_sym) }
+    ret = ret.gsub(vvv_config[:R][:OUTPUT_REGEX]) { vvv_config[:R][:OUTPUT_FORMAT] % ($1 % conf_sym) }
     ret
   end
 
@@ -48,12 +49,15 @@ class VariableScript
       x = confs.map { |conf| conf[$1.to_sym].inspect }.uniq
       x.size == 1 ? x[0].inspect : "c(#{x.join(', ')})"
     end
-    
-    ret = ret.gsub(/# (INPUT|OUTPUT): (.+)/) do
-      items = confs.map { |conf| "# #{$1}: #{$2 % conf}" }
-      items.uniq.join("\n")
+
+    v = vvv_config[:R]
+    [[v[:INPUT_REGEX], v[:INPUT_FORMAT]], [v[:OUTPUT_REGEX], v[:OUTPUT_FORMAT]]].each do |regex, format|
+      ret = ret.gsub(regex) do
+        items = confs.map { |conf| format % ($1 % conf) }
+        items.uniq.join("\n")
+      end
     end
-    puts ret
+
     ret
   end
 
