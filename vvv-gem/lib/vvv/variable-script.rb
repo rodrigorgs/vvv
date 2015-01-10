@@ -42,9 +42,6 @@ class VariableScript
   end
 
   def contents_for_multiple_configurations(confs)
-    # p original_name
-    # p contents
-    # p confs
     confs = confs.map { |conf| convert_keys_to_sym(conf) }
     ret = contents
     ret = ret.gsub(/vvv\(["'](.*?)["'],.*?\)/) do
@@ -53,9 +50,7 @@ class VariableScript
     end
     
     ret = ret.gsub(/# (INPUT|OUTPUT): (.+)/) do
-      # p $2
       items = confs.map { |conf| "# #{$1}: #{$2 % conf}" }
-      # p items
       items.uniq.join("\n")
     end
     puts ret

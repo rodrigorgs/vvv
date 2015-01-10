@@ -1,1 +1,0 @@
-../meta2014/run-script.rb

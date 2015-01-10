@@ -1,6 +1,11 @@
 #!/usr/bin/env ruby
 
-require_relative 'vis-flow'
+begin
+  require 'vvv'
+rescue LoadError
+  require 'rubygems'
+  require 'vvv'
+end
 
 @makefile = []
 @outputs = []
@@ -18,7 +23,7 @@ def run_gen_makefile
 
 		script.output_paths.each do |output|
 			@makefile << "#{output}: #{script.input_paths.join(' ')} #{script.script_path}"
-			@makefile << "\t./run-script.rb #{script.script_path}"
+			@makefile << "\tvvv-run-script #{script.script_path}"
 			@makefile << ""
 			@outputs += script.output_paths
 		end
@@ -32,6 +37,4 @@ def run_gen_makefile
 	File.open('Makefile', 'w') { |f| f.puts(out) }
 end
 
-if __FILE__ == $0
-  run_gen_makefile
-end
+run_gen_makefile

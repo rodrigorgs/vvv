@@ -12,11 +12,11 @@ Gem::Specification.new do |s|
   s.summary     = %q{Allow R projects with variable scripts.}
   s.description = %q{...}
 
-  s.add_runtime_dependency "launchy"
-  s.add_development_dependency "rspec", "~>2.5.0"
+  # s.add_runtime_dependency "launchy"
+  # s.add_development_dependency "rspec", "~>2.5"
 
-  s.files         = `git ls-files`.split("\n")
-  s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
-  s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
+  s.files         = Dir.glob("{bin,lib}/**/*")
+  s.test_files    = Dir.glob("{test,spec,features}/**/*")
+  s.executables   = Dir.glob("{bin}/**/*").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 end
