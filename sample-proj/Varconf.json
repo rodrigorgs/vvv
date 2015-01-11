@@ -1,9 +1,9 @@
 {
-  "fork.R": [
+  "fork-%{gender}.R": [
     {"gender": "male"},
     {"gender": "female"}
   ],
-  "pipe.R": [
+  "pipe-%{gender}.R": [
     {"gender": "male"},
     {"gender": "female"}
   ],

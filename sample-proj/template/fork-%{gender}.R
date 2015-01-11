@@ -2,8 +2,6 @@ source("../lib/variability.R", chdir=T)
 
 vvv_set("gender", "male")
 
-# SCRIPT: fork-%{gender}.R
-
 INPUT <- "../data/b"
 b <- readLines(vvv(INPUT))
 
