@@ -27,6 +27,15 @@ class VariableScript
     @name_pattern
   end
 
+  def file_extension
+    File.extname(original_name)[1..-1]
+  end
+
+  # programming language
+  def lang
+    file_extension.to_sym
+  end
+
   def name_for_configuration(conf)
     conf_sym = convert_keys_to_sym(conf)
     name_pattern % conf_sym
@@ -36,21 +45,21 @@ class VariableScript
     conf_sym = convert_keys_to_sym(conf)
     
     ret = contents
-    ret = ret.gsub(vvv_config[:R][:VVV_REGEX]) { conf_sym[$1.to_sym].inspect }
-    ret = ret.gsub(vvv_config[:R][:INPUT_REGEX]) { vvv_config[:R][:INPUT_FORMAT] % ($1 % conf_sym) }
-    ret = ret.gsub(vvv_config[:R][:OUTPUT_REGEX]) { vvv_config[:R][:OUTPUT_FORMAT] % ($1 % conf_sym) }
+    ret = ret.gsub(vvv_config[lang][:VVV_REGEX]) { conf_sym[$1.to_sym].inspect }
+    ret = ret.gsub(vvv_config[lang][:INPUT_REGEX]) { vvv_config[lang][:INPUT_FORMAT] % ($1 % conf_sym) }
+    ret = ret.gsub(vvv_config[lang][:OUTPUT_REGEX]) { vvv_config[lang][:OUTPUT_FORMAT] % ($1 % conf_sym) }
     ret
   end
 
   def contents_for_multiple_configurations(confs)
     confs = confs.map { |conf| convert_keys_to_sym(conf) }
     ret = contents
-    ret = ret.gsub(vvv_config[:R][:VVV_REGEX]) do
+    ret = ret.gsub(vvv_config[lang][:VVV_REGEX]) do
       x = confs.map { |conf| conf[$1.to_sym].inspect }.uniq
       x.size == 1 ? x[0].inspect : "c(#{x.join(', ')})"
     end
 
-    v = vvv_config[:R]
+    v = vvv_config[lang]
     [[v[:INPUT_REGEX], v[:INPUT_FORMAT]], [v[:OUTPUT_REGEX], v[:OUTPUT_FORMAT]]].each do |regex, format|
       ret = ret.gsub(regex) do
         items = confs.map { |conf| format % ($1 % conf) }

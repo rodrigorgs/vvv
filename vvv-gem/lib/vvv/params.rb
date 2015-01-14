@@ -6,6 +6,13 @@ def vvv_config
 			OUTPUT_REGEX: /^\s*OUTPUT\s*<-\s*['"](.+?)['"]/,
 			OUTPUT_FORMAT: 'OUTPUT <- "%s"',
 			VVV_REGEX: /vvv\(["'](.*?)["'](?:,.*?)?\)/
+		},
+		rb: {
+			INPUT_REGEX: /^\s*vvv_INPUT\s*=\s*['"](.+?)['"]/,
+			INPUT_FORMAT: 'vvv_INPUT = "%s"',
+			OUTPUT_REGEX: /^\s*vvv_OUTPUT\s*=\s*['"](.+?)['"]/,
+			OUTPUT_FORMAT: 'vvv_OUTPUT = "%s"',
+			VVV_REGEX: /vvv\(["'](.*?)["'](?:,.*?)?\)/
 		}
 	}
 

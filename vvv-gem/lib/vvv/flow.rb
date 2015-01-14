@@ -39,31 +39,32 @@ end
 def collect_flow
   nodes = []
 
-  Dir.glob("script/*.R") do |filename|
+  Dir.glob("script/*.{R,rb}") do |filename|
     lines = IO.readlines(filename)
     contents = IO.read(filename)
 
     node = ProcessingNode.new(filename)
-    contents.scan(vvv_config[:R][:INPUT_REGEX]) { |m| node.add_input(m[0]) }
-    contents.scan(vvv_config[:R][:OUTPUT_REGEX]) { |m| node.add_output(m[0]) }
+    lang = File.extname(filename)[1..-1].to_sym
+    contents.scan(vvv_config[lang][:INPUT_REGEX]) { |m| node.add_input(m[0]) }
+    contents.scan(vvv_config[lang][:OUTPUT_REGEX]) { |m| node.add_output(m[0]) }
     nodes << node
   end
 
-  Dir.glob("script/*.rb") do |filename|
-    next if filename =~ /run-script.rb$/
+  # Dir.glob("script/*.rb") do |filename|
+  #   next if filename =~ /run-script.rb$/
 
-    lines = IO.readlines(filename)
-    contents = IO.read(filename)
+  #   lines = IO.readlines(filename)
+  #   contents = IO.read(filename)
     
-    node = ProcessingNode.new(filename)
-    contents.scan(/IO.readlines\(['"](.*?)['"]\) | File.open\(['"](.*?)['"],\s*['"]r['"]\)/x) do |m|
-      node.add_input(m[0])
-    end
-    contents.scan(/File.open\(['"](.*?)['"],\s*['"]w['"]\)/x) do |m|
-      node.add_output(m[0])
-    end
-    nodes << node
-  end
+  #   node = ProcessingNode.new(filename)
+  #   contents.scan(/IO.readlines\(['"](.*?)['"]\) | File.open\(['"](.*?)['"],\s*['"]r['"]\)/x) do |m|
+  #     node.add_input(m[0])
+  #   end
+  #   contents.scan(/File.open\(['"](.*?)['"],\s*['"]w['"]\)/x) do |m|
+  #     node.add_output(m[0])
+  #   end
+  #   nodes << node
+  # end
 
   nodes
 end
