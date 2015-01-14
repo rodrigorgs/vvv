@@ -1,20 +1,30 @@
 def vvv_config
-	config = {
-		R: {
-			INPUT_REGEX: /^\s*INPUT\s*<-\s*['"](.+?)['"]/,
-			INPUT_FORMAT: 'INPUT <- "%s"',
-			OUTPUT_REGEX: /^\s*OUTPUT\s*<-\s*['"](.+?)['"]/,
-			OUTPUT_FORMAT: 'OUTPUT <- "%s"',
-			VVV_REGEX: /vvv\(["'](.*?)["'](?:,.*?)?\)/
-		},
-		rb: {
-			INPUT_REGEX: /^\s*vvv_INPUT\s*=\s*['"](.+?)['"]/,
-			INPUT_FORMAT: 'vvv_INPUT = "%s"',
-			OUTPUT_REGEX: /^\s*vvv_OUTPUT\s*=\s*['"](.+?)['"]/,
-			OUTPUT_FORMAT: 'vvv_OUTPUT = "%s"',
-			VVV_REGEX: /vvv\(["'](.*?)["'](?:,.*?)?\)/
-		}
-	}
+  config = {
+    R: {
+      INPUT_REGEX: /^\s*vvv_input\s*<-\s*['"](.+?)['"]/,
+      INPUT_FORMAT: 'vvv_input <- "%s"',
+      OUTPUT_REGEX: /^\s*vvv_output\s*<-\s*['"](.+?)['"]/,
+      OUTPUT_FORMAT: 'vvv_output <- "%s"',
+      VVV_REGEX: /vvv_eval\(["'](.*?)["'](?:,.*?)?\)/
+    },
+    rb: {
+      INPUT_REGEX: /^\s*vvv_input\s*=\s*['"](.+?)['"]/,
+      INPUT_FORMAT: 'vvv_input = "%s"',
+      OUTPUT_REGEX: /^\s*vvv_output\s*=\s*['"](.+?)['"]/,
+      OUTPUT_FORMAT: 'vvv_output = "%s"',
+      VVV_REGEX: /vvv_eval\(["'](.*?)["'](?:,.*?)?\)/
+    }
+  }
 
-	config
+  config
 end
+
+# def vvv_folders
+#   folders = {
+#     generated_scripts: 'script',
+#     script_templates: 'template',
+#     visualizations: 'doc'
+#   }
+
+#   folders
+# end

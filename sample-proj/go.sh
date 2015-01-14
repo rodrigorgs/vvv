@@ -1,1 +1,1 @@
-vvv-weave ; vvv-gen-makefile ; vvv-vis-flow 
+rm script/*; vvv-weave ; vvv-gen-makefile ; vvv-vis-flow 

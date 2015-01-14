@@ -136,13 +136,13 @@ Some scripts will take multiple data sets and create a single data set. These ar
     {
         scripts: {
             "multiple-%{number}.R": {
-                "params": [
+                "variables": [
                     {"number": "1"},
                     {"number": "2"}
                 ]
             },
             "sum.R": {
-                "params": [
+                "variables": [
                     {"number": "1"},
                     {"number": "2"}
                 ],
@@ -157,7 +157,7 @@ Example script:
     source('../lib/variability.R')
 
     total <- 0
-    for (param in vvv_confs('sum.R')$params) {
+    for (param in vvv_variables('sum.R')$params) {
         vvv_set('number', param$number)
         vvv_input <- '../data/a%{number}'
         numbers <- readLines(vvv_eval(vvv_input))

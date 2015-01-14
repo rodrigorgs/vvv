@@ -2,16 +2,14 @@ source("../lib/variability.R", chdir=T)
 
 vvv_set("gender", "male")
 
-# JOIN
+vvv_input <- "../data/d-%{gender}"
 
-INPUT <- "../data/d-%{gender}"
-
-genders <- vvv("gender")
+genders <- vvv_eval("%{gender}")
 
 all <- NA
-for (conf in vvv_confs(vvv("script", "join.R"))) {
+for (conf in vvv_variables("join.R")) {
   print(conf$gender) 
 }
 
-OUTPUT <- "../data/e"
-file.create(OUTPUT, showWarnings=F)
+vvv_output <- "../data/e"
+file.create(vvv_output, showWarnings=F)

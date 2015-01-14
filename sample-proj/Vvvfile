@@ -1,0 +1,23 @@
+{
+  "scripts": {
+    "fork-%{gender}.R": {
+      "variables": [
+        {"gender": "male"},
+        {"gender": "female"}
+      ]
+    },
+    "pipe-%{gender}.R": {
+      "variables": [
+        {"gender": "male"},
+        {"gender": "female"}
+      ]
+    },
+    "join.R": {
+      "variables": [
+        {"gender": "male"},
+        {"gender": "female"}
+      ],
+      "reduce": true
+    }
+  }
+}

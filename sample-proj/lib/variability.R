@@ -18,7 +18,7 @@ vvv_get <- function(var) {
 #
 # the variable "%{script}" refers to this script name
 #
-vvv <- function(template) {
+vvv_eval <- function(template) {
   pattern <- '[%][{].*?[}]'
   
   info <- str_locate(template, pattern)
@@ -32,9 +32,9 @@ vvv <- function(template) {
   template
 }
 
-vvv_confs <- function(script) {
-  confs <- fromJSON(file='../Varconf.json')
-  confs[[script]]
+vvv_variables <- function(script) {
+  confs <- fromJSON(file='../Vvvfile')
+  confs$scripts[[script]]$variables
 }
 
 # Testing code

@@ -2,13 +2,13 @@ source("../lib/variability.R", chdir=T)
 
 vvv_set("gender", "male")
 
-INPUT <- "../data/c-%{gender}"
-c <- readLines(vvv(INPUT))
+vvv_input <- "../data/c-%{gender}"
+c <- readLines(vvv_eval(vvv_input))
 
-gender <- vvv("gender")
+gender <- vvv_eval("%{gender}")
 result <- c(c, gender)
 
-OUTPUT <- "../data/d-%{gender}"
-writeLines(result, vvv(OUTPUT))
+vvv_output <- "../data/d-%{gender}"
+writeLines(result, vvv_eval(vvv_output))
 
-# OUTPUT: ../data/d-%{gender}
+# vvv_output: ../data/d-%{gender}

@@ -1,7 +1,7 @@
-INPUT <- "../raw-data/a"
-a <- readLines(INPUT)
+vvv_input <- "../raw-data/a"
+a <- readLines(vvv_input)
 
 b <- paste0(a, a)
 
-OUTPUT <- "../data/b"
-writeLines(b, OUTPUT)
+vvv_output <- "../data/b"
+writeLines(b, vvv_output)
