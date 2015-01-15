@@ -73,8 +73,7 @@ all_scripts = Dir.glob('script/*')
 end
 
 # Create variability.R
-File.open('lib/variability.R', 'w') do |f|
-  f.write <<-EOT
+variability_script = <<-EOT
 library(stringr)
 library(rjson)
 
@@ -122,4 +121,4 @@ if (1 == 0) {
   stopifnot("xyz" == vvv("xyz"))
 }
 EOT
-end
+write_if_different('lib/variability.R', variability_script)
