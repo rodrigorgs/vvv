@@ -12,7 +12,8 @@ require 'fileutils'
 def write_if_different(file, contents)
   old_contents = File.exist?(file) ? IO.read(file) : nil
   if old_contents.nil? || old_contents != contents
-    puts "overwriting #{file}"
+    puts "overwriting #{file}" unless old_contents.nil?
+    puts "creating #{file}" if old_contents.nil?
     File.open(file, 'w') { |f| f.write(contents) }
   else
     puts "skipping #{file}"
@@ -31,6 +32,7 @@ def copy_if_different(orig, dest)
 end
 
 # Weave template files
+woven_files = []
 json = JSON.parse(IO.read('Vvvfile'))
 json['scripts'].each_pair do |script, attributes|
   confs = attributes['variables']
@@ -40,11 +42,13 @@ json['scripts'].each_pair do |script, attributes|
 
   if reduce_script
     output_path = "script/#{file.original_name}"
+    woven_files << output_path
     contents = file.contents_for_multiple_configurations(confs)
     write_if_different(output_path, contents)
   else
     confs.each do |conf|
       output_path = "script/#{file.name_for_configuration(conf)}"
+      woven_files << output_path
       contents = file.contents_for_configuration(conf)
       contents = "# Configuration: #{conf.inspect}\n" + contents
       write_if_different(output_path, contents)
@@ -53,10 +57,19 @@ json['scripts'].each_pair do |script, attributes|
 end
 
 # Copy non-template files
+copied_files = []
 all_files = Dir.entries("template").grep(/^[^.]/)
 templates = json['scripts'].keys
 (all_files - templates).each do |file|
   copy_if_different "template/#{file}", "script/#{file}"
+  copied_files << "script/#{file}"
+end
+
+# Remove files that were not originated from a template/ file
+all_scripts = Dir.glob('script/*')
+(all_scripts - (woven_files + copied_files)).each do |path|
+  puts "removing #{path}"
+  FileUtils.rm path
 end
 
 # Create variability.R
