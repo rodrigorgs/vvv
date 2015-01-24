@@ -12,7 +12,8 @@ class GraphvizExporter
     node = @data_to_node[filename]
     if node.nil?
       # data file
-      node = @graph.add_nodes(filename, penwidth: 0.1, color: '#666666')
+      color = File.exist?(filename) ? '#666666' : '#660000'
+      node = @graph.add_nodes(filename, penwidth: 0.1, color: color)
       @data_to_node[filename] = node
     end
     node

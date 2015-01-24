@@ -69,7 +69,7 @@ end
 all_scripts = Dir.glob('script/*')
 (all_scripts - (woven_files + copied_files)).each do |path|
   puts "removing #{path}"
-  FileUtils.rm path
+  FileUtils.rm path unless File.directory?(path)
 end
 
 # Create variability.R
