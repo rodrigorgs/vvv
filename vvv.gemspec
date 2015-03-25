@@ -12,7 +12,8 @@ Gem::Specification.new do |s|
   s.summary     = %q{Allow R projects with variable scripts.}
   s.description = %q{...}
 
-  # s.add_runtime_dependency "launchy"
+  s.add_dependency "ruby-graphviz"
+  s.add_dependency "graphviz"
   # s.add_development_dependency "rspec", "~>2.5"
 
   s.files         = Dir.glob("{bin,lib}/**/*")
