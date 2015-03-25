@@ -1,0 +1,124 @@
+#!/usr/bin/env ruby
+
+begin
+  require 'vvv'
+rescue LoadError
+  require 'rubygems'
+  require 'vvv'
+end
+require 'json'
+require 'fileutils'
+
+def write_if_different(file, contents)
+  old_contents = File.exist?(file) ? IO.read(file) : nil
+  if old_contents.nil? || old_contents != contents
+    puts "overwriting #{file}" unless old_contents.nil?
+    puts "creating #{file}" if old_contents.nil?
+    File.open(file, 'w') { |f| f.write(contents) }
+  else
+    puts "skipping #{file}"
+  end
+end
+
+def copy_if_different(orig, dest)
+  a = IO.read(orig)
+  b = File.exist?(dest) ? IO.read(dest) : nil
+  if b.nil? || a != b
+    puts "copying #{orig} to #{dest}"
+    FileUtils.cp orig, dest
+  else
+    puts "skipping #{orig}"
+  end
+end
+
+# Weave template files
+woven_files = []
+json = JSON.parse(IO.read('Vvvfile'))
+json['scripts'].each_pair do |script, attributes|
+  confs = attributes['variables']
+  reduce_script = attributes['reduce']
+
+  file = VariableScript.new(script)
+
+  if reduce_script
+    output_path = "script/#{file.original_name}"
+    woven_files << output_path
+    contents = file.contents_for_multiple_configurations(confs)
+    write_if_different(output_path, contents)
+  else
+    confs.each do |conf|
+      output_path = "script/#{file.name_for_configuration(conf)}"
+      woven_files << output_path
+      contents = file.contents_for_configuration(conf)
+      contents = "# Configuration: #{conf.inspect}\n" + contents
+      write_if_different(output_path, contents)
+    end
+  end
+end
+
+# Copy non-template files
+copied_files = []
+all_files = Dir.entries("template").grep(/^[^.]/)
+templates = json['scripts'].keys
+(all_files - templates).each do |file|
+  copy_if_different "template/#{file}", "script/#{file}"
+  copied_files << "script/#{file}"
+end
+
+# Remove files that were not originated from a template/ file
+all_scripts = Dir.glob('script/*')
+(all_scripts - (woven_files + copied_files)).each do |path|
+  puts "removing #{path}"
+  FileUtils.rm path unless File.directory?(path)
+end
+
+# Create variability.R
+variability_script = <<-EOT
+library(stringr)
+library(rjson)
+
+vvv_vars = new.env(parent=emptyenv())
+
+vvv_set <- function(var, value) {
+  assign(var, value, envir=vvv_vars)
+}
+vvv_set("script", "script_name_placeholder")
+
+vvv_get <- function(var) {
+  get(var, envir=vvv_vars)
+}
+
+# template is a pattern, such as
+#
+#   "x-%{letter}-%{number}"
+#
+# the variable "%{script}" refers to this script name
+#
+vvv_eval <- function(template) {
+  pattern <- '[%][{].*?[}]'
+  
+  info <- str_locate(template, pattern)
+  while (!is.na(info[1])) {
+    placeholder <- substring(template, info[1], info[2])
+    varname <- substring(template, info[1] + 2, info[2] - 1)
+    template <- gsub(placeholder, vvv_get(varname), template, fixed=T)
+
+    info <- str_locate(template, pattern)
+  }
+  template
+}
+
+vvv_variables <- function(script) {
+  confs <- fromJSON(file='../Vvvfile')
+  confs$scripts[[script]]$variables
+}
+
+# Testing code
+if (1 == 0) {
+  vvv_set("letter", "alpha")
+  vvv_set("number", "one")
+  stopifnot("x-alpha-one" == vvv("x-%{letter}-%{number}"))
+  stopifnot("xyz" == vvv("xyz"))
+}
+EOT
+write_if_different('lib/variability.R', variability_script)

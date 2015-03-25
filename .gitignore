@@ -1,6 +1,2 @@
-*.swp
+*.gem
 *~
-data/*
-script/*
-doc/*
-!.gitkeep

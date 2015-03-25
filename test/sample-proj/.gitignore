@@ -1,0 +1,6 @@
+Makefile
+doc/*
+script/*
+data/*
+report/*
+!.gitkeep
